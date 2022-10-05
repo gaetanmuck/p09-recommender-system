@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}" />
+    </head>
+
+    <body>        
+        <div class="column">
+
+            <div class="column" style="height:30%">
+                <h1>Content base recommendations</h1>
+                <div class="p">
+                    This is a website in which you can put a user id and get his recommendations
+                </div>
+
+                <div class="row">
+                    <select class="button-17" style="margin-top: 1rem; margin-bottom: 1rem; margin-right: 1rem;" onchange="updateUserId(this.value)">
+                        <option value="" disabled selected>Choose a user</option>
+                        {% for user_id in user_ids %}
+                            <option value="{{user_id}}">{{user_id}}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="button-17" style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem;" onclick="getRecommendations()">Get recommendations</button>
+                </div>
+            </div>
+            <div class="columns">
+                <div id="recommendations" class="row" style="display:none">
+                    <h3 id="recom-title">Recommendations</h3>
+                    <ul id="list" class="p"></ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <script>
+            let user_id = ''
+
+            async function updateUserId(value) {user_id = value}
+            async function getRecommendations(){
+                if(!user_id) {
+                    alert('No user id selected')
+                    return
+                }
+
+                document.getElementById('recommendations').style.display = 'block'
+                document.getElementById('recom-title').innerHTML = 'Loading...'
+                document.getElementById('list').innerHTML = ''
+
+                const theFetch = await fetch('/recommendation?user_id=' + user_id)
+                const recommendations = await theFetch.json()
+                
+                document.getElementById('recom-title').innerHTML = 'Recommendation'
+
+                let content = ''
+                for(let r of recommendations) {
+                    content += '<li>' + r + '</li>'
+                }
+
+                document.getElementById('list').innerHTML = content
+
+            }
+        </script>
+    </body>
+</html>
