@@ -56,7 +56,8 @@ def recommendation():
     }
 
     # Asking Azure service
-    resp = requests.post('https://recommendation-system-gm.azurewebsites.net', json=json_obj)
+    resp = requests.post('https://recommendation-system-gm.azurewebsites.net/api/content-base-recommendation', json=json_obj)
+    # resp = requests.post('http://localhost:7071/api/content-base-recommendation', json=json_obj)
     json_response = json.loads(resp.text)
 
     print(json_response)
